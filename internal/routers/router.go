@@ -1,0 +1,74 @@
+package routers
+
+import (
+	"github.com/convee/go-vue-blog/internal/handler/api"
+	"github.com/convee/go-vue-blog/internal/handler/backend"
+	"github.com/convee/go-vue-blog/internal/routers/middleware"
+	"github.com/convee/go-vue-blog/pkg/utils"
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
+)
+
+type healthCheckResponse struct {
+	Status   string `json:"status"`
+	Hostname string `json:"hostname"`
+}
+
+// HealthCheck will return OK if the underlying BoltDB is healthy. At least healthy enough for demoing purposes.
+func HealthCheck(c *gin.Context) {
+	c.JSON(http.StatusOK, healthCheckResponse{Status: "UP", Hostname: utils.GetHostname()})
+}
+
+// InitRouter initialize routing information
+func InitRouter() *gin.Engine {
+	r := gin.New()
+
+	// pprof router 性能分析路由
+	// 默认关闭，开发环境下可以打开
+	// 访问方式: HOST/debug/pprof
+	// 通过 HOST/debug/pprof/profile 生成profile
+	// 查看分析图 go tool pprof -http=:5000 profile (安装graphviz: brew install graphviz)
+	// see: https://github.com/gin-contrib/pprof
+	pprof.Register(r)
+	r.Use(middleware.RequestID())
+	r.Use(middleware.Logging())
+	r.Use(middleware.Metrics(nil))
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+	// HealthCheck 健康检查路由
+	r.GET("/health", HealthCheck)
+	// metrics router 可以在 prometheus 中进行监控
+	// 通过 grafana 可视化查看 prometheus 的监控数据，使用插件6671查看
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
+	articleHandler := api.NewArticleHandler()
+	tagHandler := api.NewTagHandler()
+	pageHandler := api.NewPageHandler()
+	categoryHandler := api.NewCategoryHandler()
+	// 前台接口
+	apiGroup := r.Group("/api")
+	// 文章列表
+	apiGroup.GET("/article/list", articleHandler.List)
+	// 文章详情页
+	apiGroup.GET("/article/:id", articleHandler.Detail)
+	// 标签页
+	apiGroup.GET("/tag/list", tagHandler.List)
+	// 分类
+	apiGroup.GET("/category/list", categoryHandler.List)
+	// 自定义页面
+	apiGroup.GET("/page/:id", pageHandler.Detail)
+
+	backendGroup := r.Group("/backend")
+	backendGroup.Use(middleware.JWT())
+	{
+		backendArticleHandler := backend.NewArticleHandler()
+		backendGroup.GET("/", backendArticleHandler.Index)
+	}
+	{
+		authGroup := backendGroup.Group("/auth")
+		authGroup.GET("/login", nil)
+	}
+	return r
+}

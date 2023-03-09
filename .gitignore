@@ -1,0 +1,6 @@
+go.sum
+.idea/
+.vscode/
+logs/
+resource/
+configs/*local.yml
