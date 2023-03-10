@@ -37,6 +37,7 @@ func InitRouter() *gin.Engine {
 	r.Use(middleware.Metrics(nil))
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(middleware.Cors())
 	// HealthCheck 健康检查路由
 	r.GET("/health", HealthCheck)
 	// metrics router 可以在 prometheus 中进行监控
@@ -61,14 +62,14 @@ func InitRouter() *gin.Engine {
 	apiGroup.GET("/page/:id", pageHandler.Detail)
 
 	backendGroup := r.Group("/backend")
+	authHandler := backend.NewAuthHandler()
+	authGroup := backendGroup.Group("/auth")
+	authGroup.POST("/login", authHandler.Login)
+
 	backendGroup.Use(middleware.JWT())
 	{
 		backendArticleHandler := backend.NewArticleHandler()
 		backendGroup.GET("/", backendArticleHandler.Index)
-	}
-	{
-		authGroup := backendGroup.Group("/auth")
-		authGroup.GET("/login", nil)
 	}
 	return r
 }

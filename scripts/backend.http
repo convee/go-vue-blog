@@ -1,3 +1,12 @@
 ### 文章列表
 GET {{host}}/backend/article/list
 Authorization: {{token}}
+
+
+### 登录校验
+POST {{host}}/backend/auth/login
+
+{
+"username":"convee",
+"password":"yyds"
+}

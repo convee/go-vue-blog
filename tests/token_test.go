@@ -2,6 +2,7 @@ package tests
 
 import (
 	"github.com/convee/go-vue-blog/pkg/jwt"
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"testing"
 	"time"
 )
@@ -11,8 +12,8 @@ func TestGenToken(t *testing.T) {
 		Secret: "CD1B3SVGZOJ0dR4j7cML2mvoKkePqrUn",
 	}
 	jwt.Init(c)
-	claim := jwt.Claims{
-		Subject:   1,
+	claim := jwtgo.StandardClaims{
+		Subject:   "convee",
 		ExpiresAt: time.Now().Unix() + 31104000,
 	}
 	token, err := jwt.GenerateToken(claim)

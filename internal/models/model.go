@@ -39,14 +39,3 @@ func (p PageInfo) GetPage() int {
 func (p PageInfo) GetOffset() int {
 	return (p.GetPage() - 1) * p.GetLimit()
 }
-
-type User struct {
-	Id       uint   `gorm:"column:id;type:int(11) unsigned;primary_key;AUTO_INCREMENT" json:"id"`
-	Email    string `gorm:"column:email;type:varchar(50);NOT NULL" json:"email"`
-	Password string `gorm:"column:password;type:varchar(128);NOT NULL" json:"password"`
-	Model
-}
-
-func (m *User) TableName() string {
-	return "user"
-}

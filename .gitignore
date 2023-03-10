@@ -4,3 +4,4 @@ go.sum
 logs/
 resource/
 configs/*local.yml
+web/node_modules

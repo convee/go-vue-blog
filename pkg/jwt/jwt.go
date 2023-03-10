@@ -10,34 +10,23 @@ type Config struct {
 	TTL    time.Duration
 }
 
-type Claims struct {
-	Audience  string `json:"aud,omitempty"`
-	ExpiresAt int64  `json:"exp,omitempty"`
-	Id        string `json:"jti,omitempty"`
-	IssuedAt  int64  `json:"iat,omitempty"`
-	Issuer    string `json:"iss,omitempty"`
-	NotBefore int64  `json:"nbf,omitempty"`
-	Subject   int32  `json:"sub,omitempty"`
-	jwtgo.MapClaims
-}
-
 func Init(c *Config) {
 	jwtSecret = []byte(c.Secret)
 }
 
-func GenerateToken(claims Claims) (string, error) {
+func GenerateToken(claims jwtgo.StandardClaims) (string, error) {
 	tokenClaims := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString(jwtSecret)
 	return token, err
 }
 
-func ParseToken(token string) (*Claims, error) {
-	tokenClaims, err := jwtgo.ParseWithClaims(token, &Claims{}, func(token *jwtgo.Token) (interface{}, error) {
+func ParseToken(token string) (*jwtgo.StandardClaims, error) {
+	tokenClaims, err := jwtgo.ParseWithClaims(token, &jwtgo.StandardClaims{}, func(token *jwtgo.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
 
 	if tokenClaims != nil {
-		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
+		if claims, ok := tokenClaims.Claims.(*jwtgo.StandardClaims); ok && tokenClaims.Valid {
 			return claims, nil
 		}
 	}
