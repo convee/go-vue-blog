@@ -19,12 +19,12 @@ func NewTagHandler() *TagHandler {
 
 func (h *TagHandler) List(ctx *gin.Context) {
 	var (
-		appG = app.Gin{C: ctx}
+		ag = app.Gin{C: ctx}
 	)
 	all, err := h.s.GetAll(ctx)
 	if err != nil {
-		appG.Error(e.ERROR, err.Error(), nil)
+		ag.Error(e.ERROR, err.Error(), nil)
 		return
 	}
-	appG.Success(all)
+	ag.Success(all)
 }

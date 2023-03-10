@@ -21,3 +21,16 @@ type PageListRes struct {
 	PageInfo
 	Data []Page `json:"data"`
 }
+
+type PageAddReq struct {
+	Title string `json:"title" validate:"required"`
+}
+
+type PageUpdateReq struct {
+	Id    uint   `json:"id"  validate:"required"`
+	Title string `json:"title" validate:"required"`
+}
+
+type PageDelReq struct {
+	Id uint `json:"id" validate:"required"`
+}

@@ -8,20 +8,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ArticleHandler struct {
-	s *service.ArticleService
+type CategoryHandler struct {
+	s *service.CategoryService
 }
 
-func NewArticleHandler() *ArticleHandler {
-	return &ArticleHandler{
-		s: service.NewArticleService(),
+func NewCategoryHandler() *CategoryHandler {
+	return &CategoryHandler{
+		s: service.NewCategoryService(),
 	}
 }
 
-func (h *ArticleHandler) List(ctx *gin.Context) {
+func (h *CategoryHandler) List(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleListReq
+		req models.CategoryListReq
 	)
 	validateErr := app.BindQuery(ctx, &req)
 	if len(validateErr) > 0 {
@@ -36,11 +36,11 @@ func (h *ArticleHandler) List(ctx *gin.Context) {
 	ag.Success(list)
 }
 
-func (h *ArticleHandler) Detail(ctx *gin.Context) {
+func (h *CategoryHandler) Detail(ctx *gin.Context) {
 	var (
 		ag = app.Gin{C: ctx}
 	)
-	id := ctx.Param("id")
+	id := ctx.Query("id")
 	detail, err := h.s.Detail(ctx, id)
 	if err != nil {
 		ag.Error(e.ERROR, err.Error(), nil)
@@ -49,10 +49,10 @@ func (h *ArticleHandler) Detail(ctx *gin.Context) {
 	ag.Success(detail)
 }
 
-func (h *ArticleHandler) Add(ctx *gin.Context) {
+func (h *CategoryHandler) Add(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleAddReq
+		req models.CategoryAddReq
 	)
 	validateErr := app.BindJson(ctx, &req)
 	if len(validateErr) > 0 {
@@ -67,10 +67,10 @@ func (h *ArticleHandler) Add(ctx *gin.Context) {
 	ag.Success(detail)
 }
 
-func (h *ArticleHandler) Update(ctx *gin.Context) {
+func (h *CategoryHandler) Update(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleUpdateReq
+		req models.CategoryUpdateReq
 	)
 	validateErr := app.BindJson(ctx, &req)
 	if len(validateErr) > 0 {
@@ -85,10 +85,10 @@ func (h *ArticleHandler) Update(ctx *gin.Context) {
 	ag.Success(detail)
 }
 
-func (h *ArticleHandler) Delete(ctx *gin.Context) {
+func (h *CategoryHandler) Delete(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleDelReq
+		req models.CategoryDelReq
 	)
 	validateErr := app.BindJson(ctx, &req)
 	if len(validateErr) > 0 {

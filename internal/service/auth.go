@@ -40,9 +40,9 @@ func (s *AuthService) AuthCheck(ctx *gin.Context, req models.LoginReq) (interfac
 	if err != nil {
 		return nil, err
 	}
-	return struct {
-		Token string `json:"token"`
-	}{
-		token,
+	return models.TokenInfo{
+		Token:    token,
+		Username: user.Username,
+		Id:       user.Id,
 	}, nil
 }

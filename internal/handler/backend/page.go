@@ -8,20 +8,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ArticleHandler struct {
-	s *service.ArticleService
+type PageHandler struct {
+	s *service.PageService
 }
 
-func NewArticleHandler() *ArticleHandler {
-	return &ArticleHandler{
-		s: service.NewArticleService(),
+func NewPageHandler() *PageHandler {
+	return &PageHandler{
+		s: service.NewPageService(),
 	}
 }
 
-func (h *ArticleHandler) List(ctx *gin.Context) {
+func (h *PageHandler) List(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleListReq
+		req models.PageListReq
 	)
 	validateErr := app.BindQuery(ctx, &req)
 	if len(validateErr) > 0 {
@@ -36,7 +36,7 @@ func (h *ArticleHandler) List(ctx *gin.Context) {
 	ag.Success(list)
 }
 
-func (h *ArticleHandler) Detail(ctx *gin.Context) {
+func (h *PageHandler) Detail(ctx *gin.Context) {
 	var (
 		ag = app.Gin{C: ctx}
 	)
@@ -49,10 +49,10 @@ func (h *ArticleHandler) Detail(ctx *gin.Context) {
 	ag.Success(detail)
 }
 
-func (h *ArticleHandler) Add(ctx *gin.Context) {
+func (h *PageHandler) Add(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleAddReq
+		req models.PageAddReq
 	)
 	validateErr := app.BindJson(ctx, &req)
 	if len(validateErr) > 0 {
@@ -67,10 +67,10 @@ func (h *ArticleHandler) Add(ctx *gin.Context) {
 	ag.Success(detail)
 }
 
-func (h *ArticleHandler) Update(ctx *gin.Context) {
+func (h *PageHandler) Update(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleUpdateReq
+		req models.PageUpdateReq
 	)
 	validateErr := app.BindJson(ctx, &req)
 	if len(validateErr) > 0 {
@@ -85,10 +85,10 @@ func (h *ArticleHandler) Update(ctx *gin.Context) {
 	ag.Success(detail)
 }
 
-func (h *ArticleHandler) Delete(ctx *gin.Context) {
+func (h *PageHandler) Delete(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}
-		req models.ArticleDelReq
+		req models.PageDelReq
 	)
 	validateErr := app.BindJson(ctx, &req)
 	if len(validateErr) > 0 {

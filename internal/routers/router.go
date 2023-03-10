@@ -48,6 +48,13 @@ func InitRouter() *gin.Engine {
 	tagHandler := api.NewTagHandler()
 	pageHandler := api.NewPageHandler()
 	categoryHandler := api.NewCategoryHandler()
+
+	authHandler := backend.NewAuthHandler()
+	backendArticleHandler := backend.NewArticleHandler()
+	backendCategoryHandler := backend.NewCategoryHandler()
+	backendPageHandler := backend.NewPageHandler()
+	backendTagHandler := backend.NewTagHandler()
+
 	// 前台接口
 	apiGroup := r.Group("/api")
 	// 文章列表
@@ -62,14 +69,27 @@ func InitRouter() *gin.Engine {
 	apiGroup.GET("/page/:id", pageHandler.Detail)
 
 	backendGroup := r.Group("/backend")
-	authHandler := backend.NewAuthHandler()
-	authGroup := backendGroup.Group("/auth")
-	authGroup.POST("/login", authHandler.Login)
+	backendGroup.POST("/auth/login", authHandler.Login)
 
 	backendGroup.Use(middleware.JWT())
 	{
-		backendArticleHandler := backend.NewArticleHandler()
-		backendGroup.GET("/", backendArticleHandler.Index)
+
+		backendGroup.GET("/article/list", backendArticleHandler.List)
+		backendGroup.GET("/article/detail", backendArticleHandler.Detail)
+		backendGroup.POST("/article/add", backendArticleHandler.Add)
+		backendGroup.POST("/article/update", backendArticleHandler.Update)
+		backendGroup.POST("/article/delete", backendArticleHandler.Delete)
+		backendGroup.GET("/category/list", backendCategoryHandler.List)
+		backendGroup.GET("/category/detail", backendCategoryHandler.Detail)
+		backendGroup.POST("/category/add", backendCategoryHandler.Add)
+		backendGroup.POST("/category/update", backendCategoryHandler.Update)
+		backendGroup.POST("/category/delete", backendCategoryHandler.Delete)
+		backendGroup.GET("/page/list", backendPageHandler.List)
+		backendGroup.GET("/page/detail", backendPageHandler.Detail)
+		backendGroup.POST("/page/add", backendPageHandler.Add)
+		backendGroup.POST("/page/update", backendPageHandler.Update)
+		backendGroup.POST("/page/delete", backendPageHandler.Delete)
+		backendGroup.GET("/tag/list", backendTagHandler.List)
 	}
 	return r
 }

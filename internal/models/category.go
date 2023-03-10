@@ -19,3 +19,16 @@ type CategoryListRes struct {
 	PageInfo
 	Data []Category `json:"data"`
 }
+
+type CategoryAddReq struct {
+	Name string `json:"name" validate:"required"`
+}
+
+type CategoryUpdateReq struct {
+	Id   uint   `json:"id" validate:"required"`
+	Name string `json:"name" validate:"required"`
+}
+
+type CategoryDelReq struct {
+	Id uint `json:"id" validate:"required"`
+}

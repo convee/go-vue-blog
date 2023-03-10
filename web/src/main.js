@@ -18,7 +18,7 @@ const { message, notification, dialog } = createDiscreteApi([
   "notification",
 ]);
 //创建并挂载根实例
-let app = createApp(App);
+const app = createApp(App);
 
 // 全局提供属性
 app.provide("axios", axios); //注册网络库
@@ -27,14 +27,15 @@ app.provide("notification", notification);
 app.provide("dialog", dialog);
 app.provide("server_url", axios.defaults.baseURL);
 
-app.use(naive); //注册naive ui
-app.use(router); //注册路由
+app.use(naive); //注册 naive ui
 app.use(createPinia()); //注册使用pinia
+app.use(router); //注册路由
+
 const adminStore = AdminStore();
-// // axios拦截器
-// axios.interceptors.request.use((config) => {
-//   //每次请求都在headers中添加token
-//   config.headers.token = adminStore.token;
-//   return config;
-// });
+// axios拦截器
+axios.interceptors.request.use((config) => {
+  //每次请求都在headers中添加token
+  config.headers.Authorization = "Bearer " + adminStore.token;
+  return config;
+});
 app.mount("#app"); //挂载到app

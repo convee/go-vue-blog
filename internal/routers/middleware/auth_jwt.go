@@ -7,7 +7,6 @@ import (
 	"github.com/convee/go-vue-blog/internal/pkg/e"
 	"github.com/convee/go-vue-blog/pkg/jwt"
 	"github.com/convee/go-vue-blog/pkg/logger"
-	"github.com/spf13/cast"
 	"go.uber.org/zap"
 	"net/http"
 	"strings"
@@ -24,13 +23,13 @@ func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var code int
 		var data interface{}
-		var appG = app.Gin{C: c}
+		var ag = app.Gin{C: c}
 
 		code = e.SUCCESS
 		var headers JWTHeader
 		validateErr := app.BindHeader(c, &headers)
 		if len(validateErr) > 0 {
-			appG.Error(e.INVALID_PARAMS, "", validateErr)
+			ag.Error(e.INVALID_PARAMS, "", validateErr)
 			c.Abort()
 			return
 		}
@@ -49,12 +48,12 @@ func JWT() gin.HandlerFunc {
 			logger.Error("token expire", zap.String("token", token))
 		}
 		if code != e.SUCCESS {
-			appG.Response(http.StatusUnauthorized, code, data)
+			ag.Response(http.StatusUnauthorized, code, data)
 			c.Abort()
 			return
 		}
 		authInfo := &models.AuthInfo{
-			UserId: cast.ToUint64(claims.Subject),
+			Username: claims.Subject,
 		}
 		c.Set(enum.UserValueAuth, authInfo)
 		c.Next()

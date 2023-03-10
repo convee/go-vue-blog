@@ -16,12 +16,12 @@ type AuthBind struct {
 func ApiAuth() (g gin.HandlerFunc) {
 	return func(c *gin.Context) {
 		var (
-			appG     = app.Gin{C: c}
+			ag       = app.Gin{C: c}
 			authBind AuthBind
 		)
 		validateErr := app.BindHeader(c, &authBind)
 		if len(validateErr) > 0 {
-			appG.Error(e.INVALID_PARAMS, "", validateErr)
+			ag.Error(e.INVALID_PARAMS, "", validateErr)
 			c.Abort()
 			return
 		}

@@ -5,8 +5,43 @@ Authorization: {{token}}
 
 ### 登录校验
 POST {{host}}/backend/auth/login
+Authorization: {{token}}
 
 {
 "username":"convee",
 "password":"yyds"
+}
+
+
+### 分类列表
+GET {{host}}/backend/category/list
+Authorization: {{token}}
+
+### 分类详情
+GET {{host}}/backend/category/detail?id=3
+Authorization: {{token}}
+
+### 分类添加
+POST {{host}}/backend/category/add
+Authorization: {{token}}
+
+{
+"name":"convee3"
+}
+
+### 分类更新
+POST {{host}}/backend/category/update
+Authorization: {{token}}
+
+{
+"name":"convee22",
+"id":1
+}
+
+### 分类删除
+POST {{host}}/backend/category/delete
+Authorization: {{token}}
+
+{
+"id":1
 }
