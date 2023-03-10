@@ -19,7 +19,7 @@ const (
 )
 
 // WhereBuild sql build where
-func WhereBuild(where map[string]interface{}) (whereSQL string, vals []interface{}, err error) {
+func WhereBuild(where map[string]interface{}) (whereSQL string, vars []interface{}, err error) {
 	var wheres []string
 	for k, v := range where {
 		ks := strings.Split(k, " ")
@@ -39,11 +39,11 @@ func WhereBuild(where map[string]interface{}) (whereSQL string, vals []interface
 					lenArray := reflect.ValueOf(v).Len()
 					if lenArray != 0 {
 						wheres = append(wheres, k+" in ?")
-						vals = append(vals, v)
+						vars = append(vars, v)
 					}
 				default:
 					wheres = append(wheres, k+" = ?")
-					vals = append(vals, v)
+					vars = append(vars, v)
 				}
 			}
 		case 2:
@@ -51,31 +51,31 @@ func WhereBuild(where map[string]interface{}) (whereSQL string, vals []interface
 			switch ks[1] {
 			case "=":
 				wheres = append(wheres, fmt.Sprint(k, "=?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case ">":
 				wheres = append(wheres, fmt.Sprint(k, ">?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case ">=":
 				wheres = append(wheres, fmt.Sprint(k, ">=?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case "<":
 				wheres = append(wheres, fmt.Sprint(k, "<?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case "<=":
 				wheres = append(wheres, fmt.Sprint(k, "<=?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case "!=":
 				wheres = append(wheres, fmt.Sprint(k, "!=?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case "<>":
 				wheres = append(wheres, fmt.Sprint(k, "!=?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case "in":
 				wheres = append(wheres, fmt.Sprint(k, " in (?)"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			case "like":
 				wheres = append(wheres, fmt.Sprint(k, " like ?"))
-				vals = append(vals, v)
+				vars = append(vars, v)
 			default:
 			}
 		default:

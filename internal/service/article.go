@@ -20,8 +20,24 @@ func (s *ArticleService) List(ctx *gin.Context, req models.ArticleListReq) (inte
 	var (
 		articles []models.Article
 		total    int64
+		whereMap = make(map[string]interface{})
 	)
-	_ = s.dao.DB.Limit(req.GetLimit()).Offset(req.GetOffset()).Find(&articles).Limit(-1).Offset(-1).Count(&total)
+	db := s.dao.DB
+
+	if len(req.Keyword) > 0 {
+		whereMap["content like"] = "%" + req.Keyword + "%"
+	}
+	if req.CategoryId > 0 {
+		whereMap["category_id"] = req.CategoryId
+	}
+	build, vars, err := daos.WhereBuild(whereMap)
+	if err != nil {
+		return nil, err
+	}
+	if len(vars) > 0 {
+		db.Where(build, vars)
+	}
+	_ = db.Limit(req.GetLimit()).Offset(req.GetOffset()).Find(&articles).Limit(-1).Offset(-1).Count(&total)
 	return models.ArticleListRes{
 		PageInfo: models.PageInfo{
 			Page:    req.GetPage(),

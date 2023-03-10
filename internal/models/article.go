@@ -19,7 +19,8 @@ func (m *Article) TableName() string {
 
 type ArticleListReq struct {
 	PageInfo
-	Keyword string `json:"keyword"`
+	Keyword    string `json:"keyword"`
+	CategoryId int    `json:"category_id"`
 }
 
 type ArticleListRes struct {
