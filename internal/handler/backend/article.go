@@ -18,6 +18,13 @@ func NewArticleHandler() *ArticleHandler {
 	}
 }
 
+func (h *ArticleHandler) Stat(ctx *gin.Context) {
+	var (
+		ag = app.Gin{C: ctx}
+	)
+	ag.Success(h.s.Stat(ctx))
+}
+
 func (h *ArticleHandler) List(ctx *gin.Context) {
 	var (
 		ag  = app.Gin{C: ctx}

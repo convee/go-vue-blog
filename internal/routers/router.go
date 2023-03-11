@@ -74,6 +74,7 @@ func InitRouter() *gin.Engine {
 	backendGroup.Use(middleware.JWT())
 	{
 
+		backendGroup.GET("/article/stat", backendArticleHandler.Stat)
 		backendGroup.GET("/article/list", backendArticleHandler.List)
 		backendGroup.GET("/article/detail", backendArticleHandler.Detail)
 		backendGroup.POST("/article/add", backendArticleHandler.Add)

@@ -146,7 +146,7 @@ const tags = () => {
 }
 
 const about = () => {
-  router.push("/tags")
+  router.push("/about")
 }
 
 </script>

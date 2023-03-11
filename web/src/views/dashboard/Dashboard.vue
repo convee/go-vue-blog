@@ -8,8 +8,10 @@
     <div style="padding:20px;width:100%">
       <router-view></router-view>
     </div>
+
   </div>
-  <div class="title">后台管理系统</div>
+
+<!--  <div class="title">后台管理系统</div>-->
 </template>
 
 <script setup>
@@ -27,6 +29,7 @@ const adminStore = AdminStore()
 
 //菜单
 let menus = [
+  {name: "首页", href: "/dashboard/home"},
   {name: "文章管理", href: "/dashboard/article"},
   {name: "分类管理", href: "/dashboard/category"},
   {name: "退出", href: "logout"},

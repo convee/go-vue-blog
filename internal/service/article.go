@@ -17,6 +17,26 @@ func NewArticleService() *ArticleService {
 		dao: daos.NewDao(),
 	}
 }
+
+func (s *ArticleService) Stat(ctx *gin.Context) models.StatRes {
+	var (
+		articleCount  int64
+		tagCount      int64
+		categoryCount int64
+		pageCount     int64
+	)
+	s.dao.DB.Model(models.Article{}).Count(&articleCount)
+	s.dao.DB.Model(models.Tag{}).Count(&tagCount)
+	s.dao.DB.Model(models.Category{}).Count(&categoryCount)
+	s.dao.DB.Model(models.Page{}).Count(&pageCount)
+	return models.StatRes{
+		ArticleCount:  articleCount,
+		CategoryCount: categoryCount,
+		PageCount:     pageCount,
+		TagCount:      tagCount,
+	}
+
+}
 func (s *ArticleService) List(ctx *gin.Context, req models.ArticleListReq) (interface{}, error) {
 	var (
 		articles []models.Article

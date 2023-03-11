@@ -1,3 +1,7 @@
+### 数据统计
+GET {{host}}/backend/article/stat
+Authorization: {{token}}
+
 ### 文章列表
 GET {{host}}/backend/article/list
 Authorization: {{token}}

@@ -27,7 +27,7 @@
           <n-input v-model:value="addArticle.title" placeholder="请输入标题"/>
         </n-form-item>
         <n-form-item label="分类">
-          <n-select v-model:value="addArticle.categoryId" :options="categoriesOptions"/>
+          <n-select v-model:value="value" :options="categoriesOptions" placeholder="请选择分类"/>
         </n-form-item>
         <n-form-item label="内容">
           <rich-text-editor v-model="addArticle.content"></rich-text-editor>
@@ -146,18 +146,13 @@ const add = async () => {
   }
 }
 
-const toPage = async (pageNum) => {
-  pageInfo.page = pageNum
-  await loadArticles()
-}
-
 const toUpdate = async (article) => {
   tabValue.value = "update"
   let res = await axios.get("/backend/article/detail?id=" + article.id)
   updateArticle.id = article.id
   updateArticle.title = res.data.data.title
   updateArticle.content = res.data.data.content
-  updateArticle.categoryId = res.data.data.category_id
+  updateArticle.categoryId = res.data.data.categoryId
 }
 
 const update = async () => {

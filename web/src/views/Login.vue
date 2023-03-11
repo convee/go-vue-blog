@@ -10,7 +10,7 @@
         </n-form-item>
       </n-form>
       <template #footer>
-        <n-checkbox v-model:checked="admin.rember" label="记住我"/>
+        <n-checkbox v-model:checked="admin.remember" label="记住我"/>
         <n-button @click="login">登录</n-button>
       </template>
     </n-card>
@@ -66,8 +66,7 @@ const login = async () => {
       localStorage.setItem("password", admin.password)
       localStorage.setItem("remember", admin.remember ? "1" : "0")
     }
-    await router.push("/dashboard")
-    message.info("登录成功")
+    await router.push("/dashboard/home")
   } else {
     message.error("登录失败")
   }

@@ -17,6 +17,12 @@ func (m *Article) TableName() string {
 	return "article"
 }
 
+type StatRes struct {
+	ArticleCount  int64 `json:"articleCount"`
+	CategoryCount int64 `json:"categoryCount"`
+	PageCount     int64 `json:"pageCount"`
+	TagCount      int64 `json:"tagCount"`
+}
 type ArticleListReq struct {
 	PageInfo
 	Keyword   string `json:"keyword"`
