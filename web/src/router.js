@@ -12,6 +12,8 @@ let routes = [
       { path: "/dashboard/home", component: () => import("./views/dashboard/Home.vue") },
       { path: "/dashboard/category", component: () => import("./views/dashboard/Category.vue") },
       { path: "/dashboard/article", component: () => import("./views/dashboard/Article.vue") },
+      { path: "/dashboard/tag", component: () => import("./views/dashboard/Tag.vue") },
+      { path: "/dashboard/page", component: () => import("./views/dashboard/Page.vue") },
     ]
   },
 ];

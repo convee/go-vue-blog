@@ -32,6 +32,8 @@ let menus = [
   {name: "首页", href: "/dashboard/home"},
   {name: "文章管理", href: "/dashboard/article"},
   {name: "分类管理", href: "/dashboard/category"},
+  {name: "标签管理", href: "/dashboard/tag"},
+  {name: "页面管理", href: "/dashboard/page"},
   {name: "退出", href: "logout"},
 ];
 
