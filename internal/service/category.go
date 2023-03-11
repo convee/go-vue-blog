@@ -70,7 +70,8 @@ func (s *CategoryService) Update(ctx *gin.Context, req models.CategoryUpdateReq)
 	if category.Id <= 0 {
 		return nil, errors.New("不存在该记录")
 	}
-	s.dao.DB.Where("id != ? and name=?", req.Id, req.Name).Count(&count)
+	s.dao.DB.Model(category).Where("id != ? and name=?", req.Id, req.Name).Count(&count)
+
 	if count > 0 {
 		return nil, errors.New("名称已存在")
 	}

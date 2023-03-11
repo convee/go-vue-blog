@@ -70,7 +70,7 @@ func (s *PageService) Update(ctx *gin.Context, req models.PageUpdateReq) (interf
 	if page.Id <= 0 {
 		return nil, errors.New("不存在该记录")
 	}
-	s.dao.DB.Where("id != ? and title=?", req.Id, req.Title).Count(&count)
+	s.dao.DB.Model(page).Where("id != ? and title=?", req.Id, req.Title).Count(&count)
 	if count > 0 {
 		return nil, errors.New("名称已存在")
 	}

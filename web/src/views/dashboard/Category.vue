@@ -128,8 +128,8 @@ const deleteCategory = async (category) => {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
-      let res = await axios.post(`/backend/category/delete?id=${category.id}`)
-      if (res.data.code === 200) {
+      let res = await axios.post("/backend/category/delete", {id:category.id})
+      if (res.data.code === 0) {
         await loadCategories()
         message.info(res.data.msg)
       } else {

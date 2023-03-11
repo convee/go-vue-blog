@@ -40,7 +40,7 @@ func (h *ArticleHandler) Detail(ctx *gin.Context) {
 	var (
 		ag = app.Gin{C: ctx}
 	)
-	id := ctx.Param("id")
+	id := ctx.Query("id")
 	detail, err := h.s.Detail(ctx, id)
 	if err != nil {
 		ag.Error(e.ERROR, err.Error(), nil)

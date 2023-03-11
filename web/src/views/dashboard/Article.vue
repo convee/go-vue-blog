@@ -1,15 +1,15 @@
 <template>
   <n-tabs v-model:value="tabValue" justify-content="start" type="line">
     <n-tab-pane name="list" tab="文章列表">
-      <div v-for="(blog, index) in blogListInfo" style="margin-bottom:15px">
-        <n-card :title="blog.title">
-          {{ blog.content }}
+      <div v-for="(article, index) in articleListInfo" style="margin-bottom:15px">
+        <n-card :title="article.title">
+          {{ article.content }}
 
           <template #footer>
             <n-space align="center">
-              <div>发布时间：{{ blog.create_time }}</div>
-              <n-button @click="toUpdate(blog)">修改</n-button>
-              <n-button @click="toDelete(blog)">删除</n-button>
+              <div>发布时间：{{ article.created_at }}</div>
+              <n-button @click="toUpdate(article)">修改</n-button>
+              <n-button @click="toDelete(article)">删除</n-button>
             </n-space>
           </template>
         </n-card>
@@ -90,7 +90,7 @@ const updateArticle = reactive({
 
 //分类选项
 const categoriesOptions = ref([])
-const blogListInfo = ref([])
+const articleListInfo = ref([])
 //标签页
 const tabValue = ref("list")
 
@@ -116,7 +116,7 @@ const loadArticles = async () => {
     let d = new Date(row.create_time)
     row.create_time = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
   }
-  blogListInfo.value = temp_rows;
+  articleListInfo.value = temp_rows;
   pageInfo.count = res.data.data.count;
   pageInfo.pageCount = parseInt(pageInfo.count / pageInfo.pageSize) + (pageInfo.count % pageInfo.pageSize > 0 ? 1 : 0)
   console.log(res)
@@ -149,13 +149,14 @@ const toPage = async (pageNum) => {
   await loadArticles()
 }
 
-const toUpdate = async (blog) => {
+const toUpdate = async (article) => {
   tabValue.value = "update"
-  let res = await axios.get("/backend/article/detail?id=" + blog.id)
-  updateArticle.id = blog.id
-  updateArticle.title = res.data.rows[0].title
-  updateArticle.content = res.data.rows[0].content
-  updateArticle.categoryId = res.data.rows[0].category_id
+  let res = await axios.get("/backend/article/detail?id=" + article.id)
+  console.log(res)
+  updateArticle.id = article.id
+  updateArticle.title = res.data.data.title
+  updateArticle.content = res.data.data.content
+  updateArticle.categoryId = res.data.data.category_id
 }
 
 const update = async () => {
@@ -169,8 +170,8 @@ const update = async () => {
   }
 }
 
-const toDelete = async (blog) => {
-  let res = await axios.post("/backend/article/delete?id="+blog.id)
+const toDelete = async (article) => {
+  let res = await axios.post("/backend/article/delete", {id:article.id})
   if (res.data.code === 0) {
     message.info(res.data.msg)
     await loadArticles()

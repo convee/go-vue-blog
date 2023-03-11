@@ -86,7 +86,7 @@ func (s *ArticleService) Update(ctx *gin.Context, req models.ArticleUpdateReq) (
 	if article.Id <= 0 {
 		return nil, errors.New("不存在该记录")
 	}
-	s.dao.DB.Where("id != ? and title=?", req.Id, req.Title).Count(&count)
+	s.dao.DB.Model(article).Where("id != ? and title=?", req.Id, req.Title).Count(&count)
 	if count > 0 {
 		return nil, errors.New("标题已存在")
 	}
