@@ -21,12 +21,13 @@ func (s *TagService) List(ctx *gin.Context, req models.TagListReq) (interface{},
 		tags  []models.Tag
 		total int64
 	)
-	_ = s.dao.DB.Limit(req.GetLimit()).Offset(req.GetOffset()).Find(&tags).Limit(-1).Offset(-1).Count(&total)
+	_ = s.dao.DB.Limit(req.GetPageSize()).Offset(req.GetOffset()).Find(&tags).Limit(-1).Offset(-1).Count(&total)
 	return models.TagListRes{
 		PageInfo: models.PageInfo{
-			Page:    req.GetPage(),
-			Total:   total,
-			PerPage: req.GetLimit(),
+			Page:      req.GetPage(),
+			Total:     total,
+			PageSize:  req.GetPageSize(),
+			TotalPage: req.GetTotalPage(total),
 		},
 		Data: tags,
 	}, nil

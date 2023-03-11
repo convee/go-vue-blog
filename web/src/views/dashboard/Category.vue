@@ -29,7 +29,7 @@
         <div>添加分类</div>
       </template>
       <div>
-        <n-input v-model:value="addCategory.name" type="text" placeholder="请输入名称" />
+        <n-input v-model:value="addCategory.name" type="text" placeholder="请输入名称"/>
       </div>
       <template #action>
         <div>
@@ -43,7 +43,7 @@
         <div>修改分类</div>
       </template>
       <div>
-        <n-input v-model:value="updateCategory.name" type="text" placeholder="请输入名称" />
+        <n-input v-model:value="updateCategory.name" type="text" placeholder="请输入名称"/>
       </div>
       <template #action>
         <div>
@@ -58,9 +58,10 @@
 
 <script setup>
 
-import { AdminStore } from '../../stores/AdminStore'
-import { ref, reactive, inject, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import {AdminStore} from '../../stores/AdminStore'
+import {inject, onMounted, reactive, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+
 const router = useRouter()
 const route = useRoute()
 
@@ -79,7 +80,7 @@ const addCategory = reactive({
 })
 
 const updateCategory = reactive({
-  id:0,
+  id: 0,
   name: ""
 })
 
@@ -88,12 +89,12 @@ onMounted(() => {
 })
 
 const loadCategories = async () => {
-  let res = await axios.get("/backend/category/list")
+  let res = await axios.get("/backend/category/list?page=1&pageSize=1000")
   categoryList.value = res.data.data.data
 }
 
 const add = async () => {
-  let res = await axios.post("/backend/category/add", { name: addCategory.name })
+  let res = await axios.post("/backend/category/add", {name: addCategory.name})
   if (res.data.code === 0) {
     await loadCategories()
     message.info(res.data.msg)
@@ -103,14 +104,14 @@ const add = async () => {
   showAddModel.value = false;
 }
 
-const toUpdate = async (category) =>{
+const toUpdate = async (category) => {
   showUpdateModel.value = true
   updateCategory.id = category.id
   updateCategory.name = category.name
 }
 
-const update = async ()=>{
-  let res = await axios.post("/backend/category/update", { id:updateCategory.id, name: updateCategory.name })
+const update = async () => {
+  let res = await axios.post("/backend/category/update", {id: updateCategory.id, name: updateCategory.name})
   if (res.data.code === 0) {
     await loadCategories()
     message.info(res.data.msg)
@@ -128,7 +129,7 @@ const deleteCategory = async (category) => {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
-      let res = await axios.post("/backend/category/delete", {id:category.id})
+      let res = await axios.post("/backend/category/delete", {id: category.id})
       if (res.data.code === 0) {
         await loadCategories()
         message.info(res.data.msg)
@@ -136,7 +137,8 @@ const deleteCategory = async (category) => {
         message.error(res.data.msg)
       }
     },
-    onNegativeClick: () => { }
+    onNegativeClick: () => {
+    }
   })
 
 

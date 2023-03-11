@@ -1,13 +1,13 @@
 <template>
   <n-tabs v-model:value="tabValue" justify-content="start" type="line">
     <n-tab-pane name="list" tab="文章列表">
-      <div v-for="(article, index) in articleListInfo" style="margin-bottom:15px">
+      <div v-for="(article, index) in articleList" style="margin-bottom:15px">
         <n-card :title="article.title">
           {{ article.content }}
 
           <template #footer>
             <n-space align="center">
-              <div>发布时间：{{ article.created_at }}</div>
+              <div>发布时间：{{ article.createdAt }}</div>
               <n-button @click="toUpdate(article)">修改</n-button>
               <n-button @click="toDelete(article)">删除</n-button>
             </n-space>
@@ -16,9 +16,7 @@
       </div>
 
       <n-space>
-        <div @click="toPage(pageNum)" v-for="pageNum in  pageInfo.pageCount">
-          <div :style="'color:' + (pageNum === pageInfo.page ? 'blue' : '')">{{ pageNum }}</div>
-        </div>
+        <n-pagination @update:page="loadArticles" v-model:page="pageInfo.page" :page-count="pageInfo.totalPage"/>
       </n-space>
 
     </n-tab-pane>
@@ -26,10 +24,10 @@
 
       <n-form>
         <n-form-item label="标题">
-          <n-input v-model:value="addArticle.title" placeholder="请输入标题" />
+          <n-input v-model:value="addArticle.title" placeholder="请输入标题"/>
         </n-form-item>
         <n-form-item label="分类">
-          <n-select v-model:value="addArticle.categoryId" :options="categoriesOptions" />
+          <n-select v-model:value="addArticle.categoryId" :options="categoriesOptions"/>
         </n-form-item>
         <n-form-item label="内容">
           <rich-text-editor v-model="addArticle.content"></rich-text-editor>
@@ -43,10 +41,10 @@
     <n-tab-pane name="update" tab="修改">
       <n-form>
         <n-form-item label="标题">
-          <n-input v-model:value="updateArticle.title" placeholder="请输入标题" />
+          <n-input v-model:value="updateArticle.title" placeholder="请输入标题"/>
         </n-form-item>
         <n-form-item label="分类">
-          <n-select v-model:value="updateArticle.categoryId" :options="categoriesOptions" />
+          <n-select v-model:value="updateArticle.categoryId" :options="categoriesOptions"/>
         </n-form-item>
         <n-form-item label="内容">
           <rich-text-editor v-model="updateArticle.content"></rich-text-editor>
@@ -60,10 +58,11 @@
 </template>
 
 <script setup>
-import { AdminStore } from '../../stores/AdminStore'
-import { ref, reactive, inject, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import {AdminStore} from '../../stores/AdminStore'
+import {inject, onMounted, reactive, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import RichTextEditor from '../../components/RichTextEditor.vue'
+
 const router = useRouter()
 const route = useRoute()
 
@@ -90,7 +89,7 @@ const updateArticle = reactive({
 
 //分类选项
 const categoriesOptions = ref([])
-const articleListInfo = ref([])
+const articleList = ref([])
 //标签页
 const tabValue = ref("list")
 
@@ -98,8 +97,8 @@ const tabValue = ref("list")
 const pageInfo = reactive({
   page: 1,
   pageSize: 3,
-  pageCount: 0,
-  count: 0,
+  totalPage: 0,
+  total: 0,
 })
 
 onMounted(() => {
@@ -108,23 +107,27 @@ onMounted(() => {
 })
 
 //读取博客列表
-const loadArticles = async () => {
-  let res = await axios.get(`/backend/article/list?page=${pageInfo.page}&per_page=${pageInfo.pageSize}`)
+const loadArticles = async (page = 0) => {
+  if (page !== 0) {
+    pageInfo.page = page;
+  }
+  let res = await axios.get(`/backend/article/list?page=${pageInfo.page}&pageSize=${pageInfo.pageSize}`)
+  console.log(res)
   let temp_rows = res.data.data.data;
   for (let row of temp_rows) {
     row.content += "..."
-    let d = new Date(row.create_time)
-    row.create_time = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+    let d = new Date(row.createdAt)
+    row.createdAt = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
   }
-  articleListInfo.value = temp_rows;
-  pageInfo.count = res.data.data.count;
-  pageInfo.pageCount = parseInt(pageInfo.count / pageInfo.pageSize) + (pageInfo.count % pageInfo.pageSize > 0 ? 1 : 0)
+  articleList.value = temp_rows;
+  pageInfo.total = res.data.data.total;
+  pageInfo.totalPage = res.data.data.totalPage
   console.log(res)
 }
 
 //读取分类
 const loadCategories = async () => {
-  let res = await axios.get("/backend/category/list")
+  let res = await axios.get("/backend/category/list?page=1&pageSize=1000")
   console.log(res)
   categoriesOptions.value = res.data.data.data.map((item) => {
     return {
@@ -132,7 +135,6 @@ const loadCategories = async () => {
       value: item.id
     }
   })
-  console.log(categoriesOptions.value)
 }
 
 const add = async () => {
@@ -152,7 +154,6 @@ const toPage = async (pageNum) => {
 const toUpdate = async (article) => {
   tabValue.value = "update"
   let res = await axios.get("/backend/article/detail?id=" + article.id)
-  console.log(res)
   updateArticle.id = article.id
   updateArticle.title = res.data.data.title
   updateArticle.content = res.data.data.content
@@ -171,7 +172,7 @@ const update = async () => {
 }
 
 const toDelete = async (article) => {
-  let res = await axios.post("/backend/article/delete", {id:article.id})
+  let res = await axios.post("/backend/article/delete", {id: article.id})
   if (res.data.code === 0) {
     message.info(res.data.msg)
     await loadArticles()

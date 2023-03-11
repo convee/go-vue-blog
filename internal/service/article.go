@@ -38,12 +38,13 @@ func (s *ArticleService) List(ctx *gin.Context, req models.ArticleListReq) (inte
 	if len(vars) > 0 {
 		db.Where(build, vars)
 	}
-	_ = db.Limit(req.GetLimit()).Offset(req.GetOffset()).Find(&articles).Limit(-1).Offset(-1).Count(&total)
+	_ = db.Limit(req.GetPageSize()).Offset(req.GetOffset()).Find(&articles).Limit(-1).Offset(-1).Count(&total)
 	return models.ArticleListRes{
 		PageInfo: models.PageInfo{
-			Page:    req.GetPage(),
-			Total:   total,
-			PerPage: req.GetLimit(),
+			Page:      req.GetPage(),
+			Total:     total,
+			PageSize:  req.GetPageSize(),
+			TotalPage: req.GetTotalPage(total),
 		},
 		Data: articles,
 	}, nil

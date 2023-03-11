@@ -2,31 +2,34 @@ package models
 
 import (
 	"github.com/convee/go-vue-blog/internal/pkg/common"
+	"github.com/spf13/cast"
 	"gorm.io/gorm"
+	"math"
 )
 
 type Model struct {
-	CreatedAt common.JSONTime `json:"created_at"`
-	UpdatedAt common.JSONTime `json:"updated_at"`
-	DeletedAt gorm.DeletedAt  `json:"deleted_at"`
+	CreatedAt common.JSONTime `json:"createdAt"`
+	UpdatedAt common.JSONTime `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt  `json:"deletedAt"`
 }
 
 type PageInfo struct {
-	Page    int   `form:"page" json:"page"`
-	Total   int64 `form:"total" json:"total"`
-	PerPage int   `form:"per_page" json:"per_page"`
+	Page      int   `form:"page" json:"page"`
+	Total     int64 `form:"total" json:"total"`
+	PageSize  int   `form:"pageSize" json:"pageSize"`
+	TotalPage int64 `json:"totalPage"`
 }
 
 type OrderSort struct {
-	OrderBy string `form:"order_by" json:"order_by,omitempty"`
+	OrderBy string `form:"orderBy" json:"orderBy,omitempty"`
 	Sort    string `form:"sort" json:"sort,omitempty"`
 }
 
-func (p PageInfo) GetLimit() int {
-	if p.PerPage <= 0 {
+func (p PageInfo) GetPageSize() int {
+	if p.PageSize <= 0 {
 		return 20
 	}
-	return p.PerPage
+	return p.PageSize
 }
 
 func (p PageInfo) GetPage() int {
@@ -37,5 +40,10 @@ func (p PageInfo) GetPage() int {
 }
 
 func (p PageInfo) GetOffset() int {
-	return (p.GetPage() - 1) * p.GetLimit()
+	return (p.GetPage() - 1) * p.GetPageSize()
+}
+
+func (p PageInfo) GetTotalPage(total int64) int64 {
+	ceil := math.Ceil(float64(total) / float64(p.GetPageSize()))
+	return cast.ToInt64(ceil)
 }

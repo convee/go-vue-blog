@@ -22,12 +22,13 @@ func (s *CategoryService) List(ctx *gin.Context, req models.CategoryListReq) (in
 		categories []models.Category
 		total      int64
 	)
-	_ = s.dao.DB.Limit(req.GetLimit()).Offset(req.GetOffset()).Find(&categories).Limit(-1).Offset(-1).Count(&total)
+	_ = s.dao.DB.Limit(req.GetPageSize()).Offset(req.GetOffset()).Find(&categories).Limit(-1).Offset(-1).Count(&total)
 	return models.CategoryListRes{
 		PageInfo: models.PageInfo{
-			Page:    req.GetPage(),
-			Total:   total,
-			PerPage: req.GetLimit(),
+			Page:      req.GetPage(),
+			Total:     total,
+			PageSize:  req.GetPageSize(),
+			TotalPage: req.GetTotalPage(total),
 		},
 		Data: categories,
 	}, nil
