@@ -1,0 +1,73 @@
+definitions:
+  models.ArticleList:
+    properties:
+      author:
+        type: string
+      category:
+        type: string
+      content:
+        type: string
+      createDate:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      isPublish:
+        type: boolean
+      title:
+        type: string
+      updateDate:
+        type: string
+    type: object
+  models.ArticleListRes:
+    properties:
+      pageData:
+        items:
+          $ref: '#/definitions/models.ArticleList'
+        type: array
+      pageNum:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+      totalPage:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /article/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 页数
+        in: path
+        name: pageNum
+        required: true
+        type: integer
+      - description: 每页数量
+        in: path
+        name: pageSize
+        required: true
+        type: integer
+      - description: 文章标题
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: 分类ID
+        in: query
+        name: category_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ArticleListRes'
+      summary: 文章列表
+swagger: "2.0"

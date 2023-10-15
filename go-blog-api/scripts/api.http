@@ -1,0 +1,14 @@
+### 文章列表
+GET {{host}}/api/article/list?page=2&pageSize=2
+
+### 文章详情
+GET {{host}}/api/article/1
+
+### 所有分类
+GET {{host}}/api/category/list
+
+### 所有标签
+GET {{host}}/api/tag/list
+
+### 页面详情
+GET {{host}}/api/page/1
