@@ -127,10 +127,8 @@ redis 6.0
 ## 快速开始
 克隆项目
 ```bash
-git clone https://github.com/szluyu99/gin-vue-blog.git
+git clone https://github.com/convee/go-vue-blog.git
 ```
-## 接口文档
-示例：convee.cn/
 ### 后端部署
 ```bash
 
