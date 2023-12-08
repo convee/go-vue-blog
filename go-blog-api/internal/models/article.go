@@ -77,5 +77,5 @@ type FrontArticleListReq struct {
 }
 type FrontArticleListRes struct {
 	PageInfo
-	Data []Article `json:"data"`
+	Data []ArticleInfo `json:"data"`
 }

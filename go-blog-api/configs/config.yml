@@ -31,9 +31,9 @@ logger:
 
 orm:
   Name: vblog          # 数据库名称
-  Addr: 127.0.0.1        # 如果是 docker,可以替换为 对应的服务名称，eg: db:3306
+  Addr: localhost:4306        # 如果是 docker,可以替换为 对应的服务名称，eg: db:3306
   UserName: root
-  Password: root
+  Password: Yzm_123@yyy
   ShowLog: true                   # 是否打印所有SQL日志
   MaxIdleConn: 10                 # 最大闲置的连接数，0意味着使用默认的大小2， 小于0表示不使用连接池
   MaxOpenConn: 60                 # 最大打开的连接数, 需要小于数据库配置中的max_connections数
@@ -41,7 +41,7 @@ orm:
   SlowThreshold: 0                # 慢查询阈值，设置后只打印慢查询日志，默认为500ms
 
 redis:
-  Addr: 127.0.0.1:6379
+  Addr: localhost:7379
   Password: ""
   DB: 0
   MinIdleConn: 200

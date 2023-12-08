@@ -4,6 +4,7 @@ import (
 	"github.com/convee/go-blog-api/internal/daos"
 	"github.com/convee/go-blog-api/internal/enum"
 	"github.com/convee/go-blog-api/internal/models"
+	"github.com/convee/go-blog-api/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
@@ -66,16 +67,35 @@ func (s *ArticleService) List(ctx *gin.Context, req models.ArticleListReq) (inte
 	var (
 		articleList []models.ArticleInfo
 		categories  []models.Category
+		articleTags []models.ArticleTag
+		tags        []models.Tag
 		categoryMap = make(map[int]string)
+		tagsMap     = make(map[int]string)
 	)
 	s.dao.DB.Find(&categories)
+	s.dao.DB.Find(&tags)
+
 	for _, cate := range categories {
 		categoryMap[cast.ToInt(cate.Id)] = cate.Name
 	}
+	for _, tag := range tags {
+		tagsMap[cast.ToInt(tag.Id)] = tag.Name
+	}
+
 	for _, article := range articles {
 		var category string
+		var tagIds []uint
+		var tagNames []string
 		if _, ok := categoryMap[article.CategoryId]; ok {
 			category = categoryMap[article.CategoryId]
+		}
+		err = s.dao.DB.Where("article_id=?", article.Id).Find(&articleTags).Error
+		if err != nil {
+			logger.Error("not found article with tag")
+		}
+		for _, tag := range articleTags {
+			tagIds = append(tagIds, tag.TagId)
+			tagNames = append(tagNames, tagsMap[cast.ToInt(tag.TagId)])
 		}
 		articleList = append(articleList, models.ArticleInfo{
 			Id:          article.Id,
@@ -84,6 +104,8 @@ func (s *ArticleService) List(ctx *gin.Context, req models.ArticleListReq) (inte
 			Category:    category,
 			Description: article.Desc,
 			Author:      user.Name,
+			TagIds:      tagIds,
+			TagNames:    tagNames,
 			CreateDate:  cast.ToString(article.CreatedAt),
 			UpdateDate:  cast.ToString(article.UpdatedAt),
 		})
@@ -263,9 +285,13 @@ func (s *ArticleService) Delete(ctx *gin.Context, req models.ArticleDelReq) (int
 
 func (s *ArticleService) GetFrontList(ctx *gin.Context, req models.FrontArticleListReq) (interface{}, error) {
 	var (
-		articles []models.Article
-		total    int64
-		whereMap = make(map[string]interface{})
+		articles    []models.Article
+		articleList []models.ArticleInfo
+		articleTags []models.ArticleTag
+		tags        []models.Tag
+		total       int64
+		whereMap    = make(map[string]interface{})
+		tagsMap     = make(map[int]string)
 	)
 	db := s.dao.DB
 
@@ -282,7 +308,37 @@ func (s *ArticleService) GetFrontList(ctx *gin.Context, req models.FrontArticleL
 	if len(vars) > 0 {
 		db = db.Where(build, vars)
 	}
+	s.dao.DB.Find(&tags)
 	_ = db.Limit(req.GetPageSize()).Offset(req.GetOffset()).Order("updated_at DESC").Find(&articles).Limit(-1).Offset(-1).Count(&total)
+	for _, tag := range tags {
+		tagsMap[cast.ToInt(tag.Id)] = tag.Name
+	}
+	for _, article := range articles {
+		var (
+			tagIds   []uint
+			tagNames []string
+		)
+		err = s.dao.DB.Where("article_id=?", article.Id).Find(&articleTags).Error
+		if err != nil {
+			logger.Error("not found article with tag")
+		} else {
+			for _, tag := range articleTags {
+				tagIds = append(tagIds, tag.TagId)
+				tagNames = append(tagNames, tagsMap[cast.ToInt(tag.TagId)])
+			}
+		}
+
+		articleList = append(articleList, models.ArticleInfo{
+			Id:          article.Id,
+			Title:       article.Title,
+			Content:     article.Content,
+			Description: article.Desc,
+			TagIds:      tagIds,
+			TagNames:    tagNames,
+			CreateDate:  cast.ToString(article.CreatedAt),
+			UpdateDate:  cast.ToString(article.UpdatedAt),
+		})
+	}
 
 	return models.FrontArticleListRes{
 		PageInfo: models.PageInfo{
@@ -291,7 +347,7 @@ func (s *ArticleService) GetFrontList(ctx *gin.Context, req models.FrontArticleL
 			PageSize:  req.GetPageSize(),
 			TotalPage: req.GetTotalPage(total),
 		},
-		Data: articles,
+		Data: articleList,
 	}, nil
 }
 
