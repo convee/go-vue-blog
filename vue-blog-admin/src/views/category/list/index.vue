@@ -120,8 +120,7 @@ onMounted(() => {
       :columns="columns" :get-data="api.getCategory" @on-checked="onChecked">
       <template #queryBar>
         <QueryBarItem label="名称" :label-width="50">
-          <n-input v-model:value="queryItems.name" type="text" placeholder="请输入名称"
-            @keydown.enter="$table?.handleSearch" />
+          <n-input v-model:value="queryItems.name" type="text" placeholder="请输入名称"/>
         </QueryBarItem>
       </template>
     </CrudTable>

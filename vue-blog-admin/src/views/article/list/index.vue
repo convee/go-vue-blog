@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { NButton, NSwitch } from 'naive-ui'
+import { NButton } from 'naive-ui'
 import { CrudModal, CrudTable, QueryBarItem, useCRUD } from '@zclzone/crud'
 import api from './api'
-import { formatDateTime, isNullOrUndef, renderIcon } from '@/utils'
+import { formatDateTime, renderIcon } from '@/utils'
 const router = useRouter()
 const $table = ref<any>(null)
 /** QueryBar筛选参数（可选） */
@@ -139,8 +139,7 @@ onMounted(() => {
       :columns="columns" :get-data="api.getArticles" @on-checked="onChecked">
       <template #queryBar>
         <QueryBarItem label="标题" :label-width="50">
-          <n-input v-model:value="queryItems.title" type="text" placeholder="请输入标题"
-            @keydown.enter="$table?.handleSearch" />
+          <n-input v-model:value="queryItems.title" type="text" placeholder="请输入标题" />
         </QueryBarItem>
       </template>
     </CrudTable>
