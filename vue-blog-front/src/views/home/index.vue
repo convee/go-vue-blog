@@ -6,19 +6,15 @@
 
     <n-list hoverable clickable>
       <n-list-item v-for="(article, index) in articleListInfo">
-        <n-thing :title="article.title" @click="toDetail(article)" content-style="margin-top: 10px;">
+        <n-thing :title="article.title" @click="toDetail(article)">
           <template #description>
             <n-space size="small" style="margin-top: 4px">
-              <n-tag :bordered="false" type="info" size="small">
-                暑夜
-              </n-tag>
-              <n-tag :bordered="false" type="info" size="small">
-                晚春
+              <n-tag :bordered="false" type="info" size="small" v-for="(tag, index) in article.tagNames">
+                {{ tag }}
               </n-tag>
             </n-space>
           </template>
-          奋勇呀然后休息呀<br>
-          完成你伟大的人生
+          {{ article.description }}
         </n-thing>
       </n-list-item>
     </n-list>
@@ -56,7 +52,6 @@ const pageInfo = reactive({
 })
 
 onMounted(() => {
-
   loadArticles()
 })
 
@@ -67,7 +62,8 @@ const loadArticles = async (page = 0) => {
   if (page !== 0) {
     pageInfo.page = page;
   }
-  let res = await axios.get(`/api/article/list?keyword=${pageInfo.keyword}&page=${pageInfo.page}&pageSize=${pageInfo.pageSize}&categoryId=${pageInfo.categoryId}`)
+  pageInfo.keyword = pageInfo.keyword || '';
+  let res = await axios.get(`/api/article/list?title=${pageInfo.keyword}&pageNo=${pageInfo.page}&pageSize=${pageInfo.pageSize}&categoryId=${pageInfo.categoryId}`)
   console.log(res)
   let temp_rows = res.data.data.data;
   // 处理获取的文章列表数据
@@ -76,6 +72,7 @@ const loadArticles = async (page = 0) => {
     // 把时间戳转换为年月日
     let d = new Date(row.createdAt)
     row.create_time = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+    // row.tags=tags.value.filter(x=>x.)
   }
   articleListInfo.value = temp_rows;
   pageInfo.total = res.data.data.total;
