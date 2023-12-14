@@ -3,10 +3,11 @@ package orm
 import (
 	"database/sql"
 	"fmt"
-	"gorm.io/gorm/schema"
 	"log"
 	"os"
 	"time"
+
+	"gorm.io/gorm/schema"
 
 	// MySQL driver.
 	"gorm.io/driver/mysql"
@@ -55,7 +56,7 @@ func NewMySQL(c *Config) (db *gorm.DB) {
 		log.Panicf("database connection failed. database name: %s, err: %+v", c.Name, err)
 	}
 	db.Set("gorm:table_options", "CHARSET=utf8mb4")
-
+	log.Println("init orm success", c.Addr)
 	return db
 }
 

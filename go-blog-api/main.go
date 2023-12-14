@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/convee/go-blog-api/internal/crons"
-	"github.com/convee/go-blog-api/internal/daos"
-	"github.com/convee/go-blog-api/pkg/jwt"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/convee/go-blog-api/internal/crons"
+	"github.com/convee/go-blog-api/internal/daos"
+	"github.com/convee/go-blog-api/pkg/jwt"
 
 	"github.com/convee/go-blog-api/configs"
 	"github.com/convee/go-blog-api/pkg/logger"

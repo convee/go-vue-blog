@@ -1,1 +1,5 @@
 go-blog-api/*.exe
+deploy/blog/*
+deploy/mysql/*
+deploy/redis/*
+.vscode/launch.json

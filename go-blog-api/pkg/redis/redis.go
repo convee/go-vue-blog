@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/alicebob/miniredis/v2"
@@ -61,7 +62,7 @@ func Init(c *Config) *redis.Client {
 	if c.EnableTrace {
 		RedisClient.AddHook(redisotel.NewTracingHook())
 	}
-
+	log.Println("init redis success", c.Addr)
 	return RedisClient
 }
 
