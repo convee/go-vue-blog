@@ -10,7 +10,7 @@ import {router} from "@/router/index.js";
 import {createStore} from "vuex";
 
 // 服务端地址
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "http://localhost:8080";
 // 独立API
 const {message, notification, dialog} = createDiscreteApi([
     "message",
