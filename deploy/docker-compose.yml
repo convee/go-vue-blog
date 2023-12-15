@@ -32,7 +32,7 @@ services:
     depends_on:
       - mysql 
       - redis
-    image: blogapi:dev
+    build: ../go-blog-api/
     container_name: blogapi
     restart: unless-stopped
     ports:
@@ -43,14 +43,28 @@ services:
       TZ: Asia/Shanghai
     networks:
       - my_net
-  blog:
-    image: blog:dev
-    container_name: blog
+
+  blogfront:
+    build: ../vue-blog-front/
+    container_name: blogfront
     restart: unless-stopped
     ports:
       - "80:80"
     volumes:  
-      - ./blog/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./blog/nginx/front.conf:/etc/nginx/conf.d/front.conf
+    environment:
+      TZ: Asia/Shanghai
+    networks:
+      - my_net
+
+  blogadmin:
+    build: ../vue-blog-admin/
+    container_name: blogadmin
+    restart: unless-stopped
+    ports:
+      - "81:80"
+    volumes:  
+      - ./blog/nginx/admin.conf:/etc/nginx/conf.d/admin.conf
     environment:
       TZ: Asia/Shanghai
     networks:

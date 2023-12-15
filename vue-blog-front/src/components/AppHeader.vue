@@ -41,48 +41,48 @@ const menuOptions = [
         key: "home",
         icon: renderIcon(HomeIcon)
     },
-    {
-        label: "分类",
-        key: "category",
-        icon: renderIcon(MenuIcon),
-        children: [
-            {
-                label: "分类1",
-                key: "category1",
-            },
-            {
-                label: "分类2",
-                key: "category2",
-            }
-        ]
-    },
-    {
-        label: () => h(
-            RouterLink,
-            {
-                to: {
-                    path: "/tags"
-                }
-            },
-            { default: () => "标签" }
-        ),
-        key: "tags",
-        icon: renderIcon(PricetagsIcon)
-    }
+    // {
+    //     label: "分类",
+    //     key: "category",
+    //     icon: renderIcon(MenuIcon),
+    //     children: [
+    //         {
+    //             label: "分类1",
+    //             key: "category1",
+    //         },
+    //         {
+    //             label: "分类2",
+    //             key: "category2",
+    //         }
+    //     ]
+    // },
+    // {
+    //     label: () => h(
+    //         RouterLink,
+    //         {
+    //             to: {
+    //                 path: "/tags"
+    //             }
+    //         },
+    //         { default: () => "标签" }
+    //     ),
+    //     key: "tags",
+    //     icon: renderIcon(PricetagsIcon)
+    // }
     ,
-    {
-        label: () => h(
-            RouterLink,
-            {
-                to: {
-                    path: "/page/about"
-                }
-            },
-            { default: () => "关于我" }
-        ),
-        key: "about",
-        icon: renderIcon(PersonIcon)
-    }
+    // {
+    //     label: () => h(
+    //         RouterLink,
+    //         {
+    //             to: {
+    //                 path: "/page/about"
+    //             }
+    //         },
+    //         { default: () => "关于我" }
+    //     ),
+    //     key: "about",
+    //     icon: renderIcon(PersonIcon)
+    // }
 ];
 
 
