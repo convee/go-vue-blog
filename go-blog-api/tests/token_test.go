@@ -9,7 +9,7 @@ import (
 
 func TestGenToken(t *testing.T) {
 	c := &jwt.Config{
-		Secret: "CD1B3SVGZOJ0dR4j7cML2mvoKkePqrUn",
+		Secret: "test-secret-not-a-real-key",
 	}
 	jwt.Init(c)
 	claim := jwtgo.StandardClaims{

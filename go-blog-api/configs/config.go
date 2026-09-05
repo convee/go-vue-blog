@@ -14,6 +14,7 @@ type Config struct {
 	// common
 	App  AppConfig
 	Cron CronConfig
+	Ding DingConfig
 	// component config
 	Logger logger.Config
 	ORM    orm.Config
@@ -38,6 +39,13 @@ type AppConfig struct {
 // CronConfig cron config
 type CronConfig struct {
 	Push bool
+}
+
+// DingConfig 钉钉自定义机器人配置
+// 约束：Uri 与 Secret 是凭证，只能由部署方通过配置注入，禁止写入仓库
+type DingConfig struct {
+	Uri    string
+	Secret string
 }
 
 var (

@@ -17,10 +17,7 @@ import (
 
 //  接入文档：https://open.dingtalk.com/document/group/custom-robot-access
 
-const (
-	Uri    = "https://oapi.dingtalk.com/robot/send?access_token=be562ff6ee463df89c985a1805a9631387277a92c48a3915c8e29eaf37240bd0"
-	Secret = "SEC2bfc51aa105af02b39ce779f0518a8150ef6dc143ecb599c0ea7c674cad99a42"
-)
+// AI-LOCK: 机器人 Uri 与 Secret 是凭证，只能来自配置，禁止写回常量
 
 /**
  * 发送钉钉报警
@@ -45,6 +42,9 @@ func SendAlert(title string, content interface{}, all bool) {
 		logger.GetLogger().Error("ding error", zap.Error(err))
 		return
 	}
+	if configs.Conf.Ding.Uri == "" {
+		return
+	}
 	dingUrl := makeDingUrl()
 	_, err = http.Post(dingUrl, "application/json", bytes.NewBuffer(bytePayload))
 	if err != nil {
@@ -53,15 +53,16 @@ func SendAlert(title string, content interface{}, all bool) {
 }
 
 func makeDingUrl() string {
+	secret := configs.Conf.Ding.Secret
 	timestamp := time.Now().UnixNano() / 1000000
-	signStr := fmt.Sprintf("%d\n%s", timestamp, Secret)
+	signStr := fmt.Sprintf("%d\n%s", timestamp, secret)
 
-	hash := hmac.New(sha256.New, []byte(Secret))
+	hash := hmac.New(sha256.New, []byte(secret))
 	hash.Write([]byte(signStr))
 	sum := hash.Sum(nil)
 
 	encode := base64.StdEncoding.EncodeToString(sum)
 	urlEncode := url.QueryEscape(encode)
-	return fmt.Sprintf("%s&timestamp=%d&sign=%s", Uri, timestamp, urlEncode)
+	return fmt.Sprintf("%s&timestamp=%d&sign=%s", configs.Conf.Ding.Uri, timestamp, urlEncode)
 
 }

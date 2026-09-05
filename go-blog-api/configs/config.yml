@@ -8,8 +8,12 @@ app:
   FfprobePath: "/usr/local/bin/ffprobe"
   Env: local
 jwt:
-  Secret: CD1B3SVGZOJ0dR4j7cML2mvoKkePqrUn
+  Secret: ""              # 部署时填入随机密钥，勿提交真实值
   TTL: 20160
+
+ding:
+  Uri: ""                 # 钉钉机器人 webhook，含 access_token，勿提交真实值
+  Secret: ""              # 钉钉机器人加签密钥，勿提交真实值
 cron:
   Push: false
 
